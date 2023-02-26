@@ -62,9 +62,9 @@
     <!-- Right elements -->
     <div class="d-flex align-items-center">
       
-      { {% if app.user %}
+       {% if app.user %}
           
-          { <a class="nav-link me-3" href="#">
+           <a class="nav-link me-3" href="#">
             <i class="fas fa-shopping-cart"></i>
           </a>
            Welcome {{ app.user.name }},
@@ -72,17 +72,19 @@
         {% else %}
         <a class="nav-link" href="{{ path('app_login') }}"><i class="fas fa-sign-in-alt"></i></a>
         
-          <a class="nav-link" href="{{ path('app_register') }}">Register</a> }
+          <a class="nav-link" href="{{ path('app_register') }}">Register</a> 
         
-        {% endif %}}
+        {% endif %}
  
+
+
       <!-- Icon -->
-      { <a class="nav-link me-3" href="#">
+       <a class="nav-link me-3" href="#">
         <i class="fas fa-shopping-cart"></i>
       </a>
       <a class="nav-link me-3" href="#">
         <i class="fas fa-sign-in-alt"></i>
-      </a>}
+      </a>
     </div>
     <!-- Right elements -->
     
@@ -136,6 +138,7 @@
   <!-- Container wrapper -->
 </nav>
 <!-- Navbar -->
+  
   
 <!-- Products -->
   <section>
@@ -231,6 +234,37 @@
         data-mdb-ripple-color="dark"
         ><i class="fab fa-github"></i
       ></a>
+      <div class="footer-top-area">
+        <div class="zigzag-bottom"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-3 col-sm-6">
+                    <div class="footer-about-us">
+                    <h2><span>Note</span></h2>
+                        <p>This is a store specializing in providing accessories and home appliances, 
+                        the store is very prestigious and has many famous branches across the country.</p>                    
+                </div>    
+
+ <header id="header">
+		{# <div class="header_top">
+			<div class="container"> #}
+				{# <div class="row"> #}
+					{# <div class="col-sm-6"> #}
+						<div class="contactinfo">
+							<ul class="nav nav-pills">
+								<li><a href="#"><i class="fa fa-phone"></i> 0396707375</a></li>
+								<li><a href="#"><i class="fa fa-envelope"></i> homemyofstore1311@gmail.com</a></li                               
+							</ul>
+						</div>
+					</div>       
+      </div>
+      </div>
+    </div> 
+
+
+
+					
+        
             {# <!-- Facebook -->
       <li style="--i:#a955ff;--j:#ea51ff;">
       <span class="icon"><i class="fab fa-facebook"></i></span>
@@ -268,8 +302,11 @@
   <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2); text-color: #FFFFFF">
     © 2023 Copyright
   </div>
+  
   <!-- Copyright -->
 </footer>
 </body>
+
+
 </html>
 
