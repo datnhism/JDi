@@ -2,128 +2,107 @@
 
 namespace App\Controller;
 
-use App\Entity\Product;
-use App\Form\ProductType;
-use App\Repository\ProductRepository;
+use App\Entity\Category;
+use App\Form\Type\CategoryFormType;
+use App\Repository\CategoryRepository;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\String\Slugger\SluggerInterface;
-/**
- * @Route("/product")
- */
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class ProductController extends AbstractController
+class CategoryController extends AbstractController
 {
-    private ProductRepository $repo;
-    public function __construct(ProductRepository $repo)
-    {
-        $this->repo = $repo;
-    }
     /**
-     * @Route("/", name="product_show")
+     * @Route("/category", name="app_category")
      */
-    public function readAllAction(): Response
+    public function showCategoryAction(CategoryRepository $repo): Response
     {
-        $products = $this->repo->findAll();
-        return $this->render('product/index.html.twig', [
-            'products' => $products
+        $category = $repo->findAll();
+        return $this->render('Category/index.html.twig',[
+            'category'=> $category
         ]);
     }
-
     /**
-     * @Route("/{id}", name="product_read",requirements={"id"="\d+"})
-     */
-    public function showAction(Product $p): Response
+    * @Route("/category/add", name="addCategory")
+    */
+    public function addCategoryAction(ManagerRegistry $res, Request $req, ValidatorInterface $valid): Response
     {
-        return $this->render('detail.html.twig', [
-            'p' => $p
-        ]);
-    }
-
-    /**
-     * @Route("/add", name="product_create")
-     */
-    public function createAction(Request $req, SluggerInterface $slugger): Response
-    {
-
-        $p = new Product();
-        $form = $this->createForm(ProductType::class, $p);
-
-        $form->handleRequest($req);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($p->getCreated() === null) {
-                $p->setCreated(new \DateTime());
+        $category = new Category();
+        $categoryForm = $this->createForm(CategoryFormType::class, $category);
+        $categoryForm ->handleRequest($req);
+        $entity = $res->getManager();
+        if($categoryForm->isSubmitted() && $categoryForm->isValid())
+        {
+            $data = $categoryForm->getData();
+            $category->setCatName($data->getCatName());
+            $category->setCatDes($data->getCatDes());
+ 
+            $err = $valid->validate($category);
+            if (count($err) > 0) {
+                $string_err = (string)$err;
+                return new Response($string_err, 400);
             }
-            $imgFile = $form->get('file')->getData();
-            if ($imgFile) {
-                $newFilename = $this->uploadImage($imgFile, $slugger);
-                $p->setImage($newFilename);
-            }
-            $this->repo->save($p, true);
-            return $this->redirectToRoute('product_show', [], Response::HTTP_SEE_OTHER);
-        }
-        return $this->render("product/form.html.twig", [
-            'form' => $form->createView()
-        ]);
-    }
-
-    /**
-     * @Route("/edit/{id}", name="product_edit",requirements={"id"="\d+"})
-     */
-    public function editAction(
-        Request $req,
-        Product $p,
-        SluggerInterface $slugger
-    ): Response {
-
-        $form = $this->createForm(ProductType::class, $p);
-
-        $form->handleRequest($req);
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            if ($p->getCreated() === null) {
-                $p->setCreated(new \DateTime());
-            }
-            $imgFile = $form->get('file')->getData();
-            if ($imgFile) {
-                $newFilename = $this->uploadImage($imgFile, $slugger);
-                $p->setImage($newFilename);
-            }
-            $this->repo->save($p, true);
-            return $this->redirectToRoute('product_show', [], Response::HTTP_SEE_OTHER);
-        }
-        return $this->render("product/form.html.twig", [
-            'form' => $form->createView()
-        ]);
-    }
-
-    public function uploadImage($imgFile, SluggerInterface $slugger): ?string
-    {
-        $originalFilename = pathinfo($imgFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $safeFilename = $slugger->slug($originalFilename);
-        $newFilename = $safeFilename . '-' . uniqid() . '.' . $imgFile->guessExtension();
-        try {
-            $imgFile->move(
-                $this->getParameter('image_dir'),
-                $newFilename
+            $entity->persist($category);
+            $entity->flush();
+ 
+            $this->addFlash(
+                'success',
+                'Your post was added'
             );
-        } catch (FileException $e) {
-            echo $e;
+            return $this->redirectToRoute("app_category");
         }
-        return $newFilename;
+        return $this->render('category/add.html.twig', [
+            'form' => $categoryForm->createView()
+        ]);
     }
-
-    /**
-     * @Route("/delete/{id}",name="product_delete",requirements={"id"="\d+"})
+      /**
+     * @Route("/edit/Category/{id}", name="editCategory")
      */
-
-    public function deleteAction(Request $request, Product $p): Response
+    public function editCategoryAction(ManagerRegistry $res, Request $req, ValidatorInterface $valid, CategoryRepository $repo, $id): Response
     {
-        $this->repo->remove($p, true);
-        return $this->redirectToRoute('product_show', [], Response::HTTP_SEE_OTHER);
+        $category = $repo->find($id);
+        $categoryForm = $this->createForm(CategoryFormType::class, $category);
+        $categoryForm ->handleRequest($req);
+        $entity = $res->getManager();
+        if($categoryForm->isSubmitted() && $categoryForm->isValid())
+        {
+            $data = $categoryForm->getData();
+            $category->setCatName($data->getCatName());
+            $category->setCatDes($data->getCatDes());
+            $err = $valid->validate($category);
+            if (count($err) > 0) {
+                $string_err = (string)$err;
+                return new Response($string_err, 400);
+            }
+            $entity->persist($category);
+            $entity->flush();
+ 
+            $this->addFlash(
+                'success',
+'Your post was added'
+            );
+            return $this->redirectToRoute("app_category");
+        }
+        return $this->render('category/add.html.twig', [
+            'form' => $categoryForm->createView()
+        ]);
+    }
+      /**
+     * @Route("/delete/Category{id}", name="deleteCategory")
+     */
+    public function deleteCategoryFunction(CategoryRepository $repo, ManagerRegistry $doc, $id): Response
+    {
+        $category = $repo->find($id);
+ 
+        if (!$category) {
+            throw
+            $this->createNotFoundException('Invalid ID ' . $id);
+        }
+        $entity = $doc->getManager();
+        $entity->remove($category);
+        $entity->flush();
+        return $this->redirectToRoute("app_category");
     }
 }
