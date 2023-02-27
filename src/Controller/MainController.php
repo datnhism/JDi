@@ -32,4 +32,13 @@ class MainController extends AbstractController
             
         ]);
     }
+
+    /**
+     * @Route("/", name="home")
+     */
+    public function homepageAction(): Response{
+        return $this->render('home.html.twig', [
+            
+        ]);
+    }
 }
