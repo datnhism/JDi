@@ -18,13 +18,13 @@ class ProductType extends AbstractType
         ->add('name')
         ->add('price')
         ->add('created',DateType::class,[
-            'widget' => 'single_text',
+            'widget' => 'singletext',
             'required'=>false
 
         ])
         ->add('quantity')
         ->add('file', FileType::class, [
-            'label' => 'Product Image',
+            'label' => 'product Image',
             'required'=>false,
             'mapped' => false
         ])
@@ -32,7 +32,7 @@ class ProductType extends AbstractType
             'required'=>false
         ])
         ->add('save', SubmitType::class, [
-            'label' => "Confirm"
+            'label' => "confirm"
         ])
         ;
     }
