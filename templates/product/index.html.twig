@@ -33,7 +33,7 @@
                                   <td>{{ p.created|date("m/d/Y")}}</td>
                                   <td>{{ p.quantity}}</td>
                                   <td>
-                                    <a href="{{path('product_edit',{'id':p.id})}}">Edit</a>
+                                    <a href="{{path('product_edit',{'id':p.id})}}">Update</a>
                                   <a href="{{path('product_delete',{'id':p.id})}}">Delete</a></td>
                               </tr>
                           {% endfor %}

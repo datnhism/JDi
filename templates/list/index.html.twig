@@ -5,12 +5,12 @@
       <div class="col-md-12">
         <div class="card bg-light mb-3 mt-3">
           <div class="card-body">
-            <div class="card-header">List of top products</div>
+            <div class="card-header">List of top products of our website</div>
             {% if app.user != null %}
               <table class="table">
                 <tr>
                   <th>Product Name</th>
-                  <th>Market Value</th>
+                  <th>Total Market Value</th>
                 </tr>
                 {% for key, item in companies %}
                   <tr>
@@ -23,7 +23,7 @@
           </div>
         </div>
         {% if app.user == null %}
-          <a href="{{ path('app_login') }}" class="btn btn-info">You need to login to see the list 😜😜 >></a>
+          <a href="{{ path('app_login') }}" class="btn btn-info">You need to login first 😜😜 >></a>
         {% endif %}
       </div>
     </div>

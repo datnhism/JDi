@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 /**
- * @Route("/product")
+ * @Route("/admin/product")
  */
 
 class ProductController extends AbstractController
@@ -24,7 +24,7 @@ class ProductController extends AbstractController
         $this->repo = $repo;
     }
     /**
-     * @Route("/", name="product_show")
+     * @Route("/admin", name="product_show")
      */
     public function readAllAction(): Response
     {
