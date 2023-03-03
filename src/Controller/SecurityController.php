@@ -14,9 +14,9 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        //get the login error message if there is one
+        
         $error = $authenticationUtils->getLastAuthenticationError();
-        //last username entered error by the user
+        
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', ['last_username'=>$lastUsername, 'error'=>$error]);
@@ -30,3 +30,4 @@ class SecurityController extends AbstractController
         throw new \Exception('This method can be blank - it will be intercepted by thelogout key on your firewall');
     }
 }
+?>
